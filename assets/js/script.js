@@ -1,0 +1,9 @@
+const html=document.documentElement,header=document.querySelector('.header'),theme=document.querySelector('.theme'),themeIcon=theme.querySelector('i'),menu=document.querySelector('.menu'),menuIcon=menu.querySelector('i'),nav=document.querySelector('#nav'),topBtn=document.querySelector('.top'),links=[...nav.querySelectorAll('a')],sections=[...document.querySelectorAll('main section[id]')];
+function setTheme(value){html.dataset.theme=value;localStorage.setItem('portfolio-theme',value);themeIcon.className=value==='dark'?'fa-solid fa-sun':'fa-solid fa-moon'}
+setTheme(localStorage.getItem('portfolio-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+theme.addEventListener('click',()=>setTheme(html.dataset.theme==='dark'?'light':'dark'));
+menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',open);menuIcon.className=open?'fa-solid fa-xmark':'fa-solid fa-bars'});
+links.forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menuIcon.className='fa-solid fa-bars'}));
+function onScroll(){const y=scrollY;header.classList.toggle('scrolled',y>10);topBtn.classList.toggle('visible',y>600);let current='';sections.forEach(s=>{if(y>=s.offsetTop-150)current=s.id});links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current))}
+addEventListener('scroll',onScroll,{passive:true});onScroll();topBtn.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));document.querySelector('#year').textContent=new Date().getFullYear();
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
